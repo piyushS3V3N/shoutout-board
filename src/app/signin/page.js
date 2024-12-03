@@ -1,10 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { signInWithEmailAndPassword, signInAnonymously } from "firebase/auth";
 import { auth } from "../../../utils/firebase";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import routes from "../route";
+
+import Link from "next/link"; // Import Link for navigation
 
 const SignIn = () => {
   const router = useRouter();
@@ -16,7 +17,7 @@ const SignIn = () => {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      router.push(routes.MESSAGE_BOARD); // Redirect to the message board
+      router.push("/message-board"); // Navigate to message board after successful sign-in
     } catch (err) {
       setError("Failed to sign in: " + err.message);
     }
@@ -25,7 +26,7 @@ const SignIn = () => {
   const handleAnonymousSignIn = async () => {
     try {
       await signInAnonymously(auth); // Sign in anonymously
-      router.push(routes.MESSAGE_BOARD); // Redirect to the message board
+      router.push("/message-board"); // Navigate to message board
     } catch (err) {
       setError("Failed to sign in anonymously: " + err.message);
     }
@@ -69,6 +70,13 @@ const SignIn = () => {
       >
         Sign In Anonymously
       </button>
+
+      {/* Link to go back to the home page */}
+      <Link href={"/"}>
+        <button className="mt-4 bg-gray-300 text-black px-4 py-2 rounded">
+          Go to Home Page
+        </button>
+      </Link>
     </div>
   );
 };

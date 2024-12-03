@@ -5,7 +5,6 @@ import { useAuth } from "../../../components/FirebaseProvider";
 import { useRouter } from "next/navigation";
 import MessageList from "../../../components/MessageList";
 import MessageForm from "../../../components/MessageForm";
-import routes from "../route";
 
 const MessageBoard = () => {
   const { user } = useAuth();
@@ -14,7 +13,7 @@ const MessageBoard = () => {
 
   useEffect(() => {
     if (!user) {
-      router.push(routes.SIGN_IN); // Redirect to sign-in if no user
+      router.push("/signin"); // Redirect to sign-in if no user
     }
   }, [user, router]);
 
