@@ -1,12 +1,12 @@
 // pages/signup.js
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/router";
-import firebase from "../lib/firebase"; // Import Firebase from our lib file
+import { useRouter } from "next/navigation";
+import { auth } from "../../../utils/firebase"; // Import the Firebase Auth instance
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth"; // Import necessary Firebase Auth functions
 
 export default function Signup() {
   const [formData, setFormData] = useState({
-    fullName: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -30,7 +30,6 @@ export default function Signup() {
   // Validate the form
   const validateForm = () => {
     const errors = {};
-    if (!formData.fullName) errors.fullName = "Full Name is required";
     if (!formData.email) errors.email = "Email is required";
     else if (!/\S+@\S+\.\S+/.test(formData.email))
       errors.email = "Email is not valid";
@@ -58,17 +57,17 @@ export default function Signup() {
 
     try {
       // Create a new user with Firebase Authentication
-      const userCredential = await firebase
-        .auth()
-        .createUserWithEmailAndPassword(formData.email, formData.password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password,
+      );
 
-      // Optional: Update user's profile with their full name
-      await userCredential.user.updateProfile({
-        displayName: formData.fullName,
-      });
+      // After successful signup, optionally update user's profile (if needed)
+      // await updateProfile(userCredential.user, { displayName: formData.fullName });
 
       // After successful signup, redirect to the login page
-      router.push("/login");
+      router.push("/signin");
     } catch (error) {
       // Handle Firebase-specific errors
       setFirebaseError(error.message);
@@ -78,70 +77,83 @@ export default function Signup() {
   };
 
   return (
-    <div className="signup-container">
-      <h1>Sign Up</h1>
-      <form onSubmit={handleSubmit}>
-        {/* Display any general submission errors */}
-        {firebaseError && <div className="error">{firebaseError}</div>}
-
-        <div className="form-group">
-          <label htmlFor="fullName">Full Name</label>
-          <input
-            type="text"
-            id="fullName"
-            name="fullName"
-            value={formData.fullName}
-            onChange={handleChange}
-            required
-          />
-          {errors.fullName && <div className="error">{errors.fullName}</div>}
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-          {errors.email && <div className="error">{errors.email}</div>}
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-          {errors.password && <div className="error">{errors.password}</div>}
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="confirmPassword">Confirm Password</label>
-          <input
-            type="password"
-            id="confirmPassword"
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            required
-          />
-          {errors.confirmPassword && (
-            <div className="error">{errors.confirmPassword}</div>
+    <div className="flex justify-center items-center min-h-screen ">
+      <div className="bg-black text-white p-8 rounded-lg shadow-lg border-2 border-white w-96">
+        <h1 className="text-2xl font-bold text-center mb-4">Sign Up</h1>
+        <form onSubmit={handleSubmit}>
+          {/* Display any general submission errors */}
+          {firebaseError && (
+            <div className="text-red-500 text-sm mb-4">{firebaseError}</div>
           )}
-        </div>
 
-        <button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Signing Up..." : "Sign Up"}
-        </button>
-      </form>
+          <div className="mb-4">
+            <label htmlFor="email" className="block text-sm font-medium">
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full p-2 mt-1 bg-gray-800 border border-gray-600 rounded text-white"
+              required
+            />
+            {errors.email && (
+              <div className="text-red-500 text-sm mt-1">{errors.email}</div>
+            )}
+          </div>
+
+          <div className="mb-4">
+            <label htmlFor="password" className="block text-sm font-medium">
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              className="w-full p-2 mt-1 bg-gray-800 border border-gray-600 rounded text-white"
+              required
+            />
+            {errors.password && (
+              <div className="text-red-500 text-sm mt-1">{errors.password}</div>
+            )}
+          </div>
+
+          <div className="mb-6">
+            <label
+              htmlFor="confirmPassword"
+              className="block text-sm font-medium"
+            >
+              Confirm Password
+            </label>
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              className="w-full p-2 mt-1 bg-gray-800 border border-gray-600 rounded text-white"
+              required
+            />
+            {errors.confirmPassword && (
+              <div className="text-red-500 text-sm mt-1">
+                {errors.confirmPassword}
+              </div>
+            )}
+          </div>
+
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full p-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-600"
+          >
+            {isSubmitting ? "Signing Up..." : "Sign Up"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

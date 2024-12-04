@@ -1,10 +1,13 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { db, collection, onSnapshot, query, orderBy } from "../utils/firebase"; // Import query and orderBy
 import { decryptMessage } from "../utils/encryption"; // Decrypt the messages
+import { useAuth } from "./FirebaseProvider"; // Assuming you're using FirebaseProvider for user context
 
 const MessageList = ({ secretKey }) => {
+  const { user } = useAuth(); // Get current user from context
   const [messages, setMessages] = useState([]);
+  const messagesEndRef = useRef(null); // Ref to scroll to the last message
 
   useEffect(() => {
     // Set up Firestore real-time listener with ordering by timestamp
@@ -37,20 +40,39 @@ const MessageList = ({ secretKey }) => {
     return () => unsubscribe();
   }, [secretKey]); // Re-run when the secretKey changes
 
+  // Scroll to the bottom when new messages arrive
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]); // Runs every time messages are updated
+
   return (
-    <div className="space-y-4 mt-4">
+    <div className="space-y-4 mt-4 flex-row-reverse overflow-y-auto">
       {messages.map((msg) => (
-        <div key={msg.id} className="p-2 border-b">
-          <strong>
-            {msg.userId === "anonymous" ? "Anonymous" : msg.userId}
-          </strong>
-          <p>{msg.message}</p>
-          <span className="text-sm text-gray-500">
+        <div
+          key={msg.id}
+          className={`p-4 border-2 rounded-lg shadow-md ${
+            msg.userId === user?.uid
+              ? "bg-blue-500 text-white" // Current user's messages in blue
+              : "bg-teal-50 text-white" // Other users' messages in gray
+          }`}
+        >
+          <div className="mb-2">
+            <strong>
+              {msg.userId === "anonymous" ? "Anonymous" : msg.userId}
+            </strong>
+          </div>
+          <p className="mb-2">{msg.message}</p>
+          <span className="text-sm text-gray-400">
             {new Date(msg.timestamp).toLocaleString()}{" "}
             {/* Convert timestamp to readable format */}
           </span>
         </div>
       ))}
+
+      {/* Empty div at the bottom to scroll to */}
+      <div ref={messagesEndRef} />
     </div>
   );
 };
