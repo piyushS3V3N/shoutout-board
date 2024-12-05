@@ -10,7 +10,7 @@ import { doc, getDoc } from "firebase/firestore"; // Correct Firestore imports
 import { db } from "../../../utils/firebase"; // Import the Firestore instance
 
 const MessageBoard = () => {
-  const { user } = useAuth();
+  const { user } = useAuth(); // Get the current user from context
   const router = useRouter();
   const [userIcon, setUserIcon] = useState("/default.png"); // Default icon if none is set
 
@@ -49,12 +49,17 @@ const MessageBoard = () => {
     router.push("/usermanage");
   };
 
+  const handleLogout = () => {
+    // Navigate to the logout page to handle the sign-out process
+    router.push("/logout");
+  };
+
   return (
     <div className="flex flex-col h-screen bg-gray-950 relative">
       {/* Profile icon button */}
       <button
         onClick={handleProfileClick}
-        className="absolute top-4 right-4 bg-gray-700 hover:bg-gray-600 p-2 rounded-full"
+        className="absolute top-4 left-16 bg-gray-700 hover:bg-gray-600 p-2 rounded-full"
       >
         <Image
           src={userIcon} // Use the user's icon or fallback to default
@@ -63,6 +68,14 @@ const MessageBoard = () => {
           height={32}
           className="rounded-full object-cover"
         />
+      </button>
+
+      {/* Logout button */}
+      <button
+        onClick={handleLogout}
+        className="absolute top-4 right-4 bg-red-600 hover:bg-red-500 p-2 rounded-full"
+      >
+        <span className="text-white font-bold">Logout</span>
       </button>
 
       {/* Chat header */}
