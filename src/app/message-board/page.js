@@ -1,14 +1,39 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../../../components/FirebaseProvider";
 import { useRouter } from "next/navigation";
 import MessageList from "../../../components/MessageList";
 import MessageForm from "../../../components/MessageForm";
+import Image from "next/image"; // Import Image component
+import { doc, getDoc } from "firebase/firestore"; // Correct Firestore imports
+import { db } from "../../../utils/firebase"; // Import the Firestore instance
 
 const MessageBoard = () => {
   const { user } = useAuth();
   const router = useRouter();
+  const [userIcon, setUserIcon] = useState("/default.png"); // Default icon if none is set
+
+  // Fetch user icon on component mount
+  useEffect(() => {
+    if (user) {
+      const fetchUserIcon = async () => {
+        try {
+          // Firestore reference to the user's document in the "user_info" collection
+          const userDocRef = doc(db, "user_info", user.uid);
+
+          const userDoc = await getDoc(userDocRef);
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            setUserIcon(userData.icon || "/default.png"); // Set user icon or fallback to default
+          }
+        } catch (err) {
+          console.error("Error fetching user data:", err);
+        }
+      };
+      fetchUserIcon();
+    }
+  }, [user]);
 
   // Redirect to sign-in page if no user is logged in
   useEffect(() => {
@@ -18,10 +43,30 @@ const MessageBoard = () => {
   }, [user, router]);
 
   if (!user) return <div>Loading...</div>; // Prevent rendering before redirect
+
+  const handleProfileClick = () => {
+    // Redirect to user management page
+    router.push("/usermanage");
+  };
+
   return (
-    <div className="flex flex-col h-screen bg-gray-950">
+    <div className="flex flex-col h-screen bg-gray-950 relative">
+      {/* Profile icon button */}
+      <button
+        onClick={handleProfileClick}
+        className="absolute top-4 right-4 bg-gray-700 hover:bg-gray-600 p-2 rounded-full"
+      >
+        <Image
+          src={userIcon} // Use the user's icon or fallback to default
+          alt="User Avatar"
+          width={32}
+          height={32}
+          className="rounded-full object-cover"
+        />
+      </button>
+
       {/* Chat header */}
-      <div className="text-center py-4 bg-gray-950  text-white">
+      <div className="text-center py-4 bg-gray-950 text-white">
         <h1 className="text-2xl font-bold">Message Board</h1>
       </div>
 
