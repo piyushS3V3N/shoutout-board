@@ -1,5 +1,4 @@
 import CryptoJS from "crypto-js";
-console.log("SECRET_KEY:", process.env.NEXT_PUBLIC_SECRET_KEY);
 // Encrypt message using the SECRET_KEY from environment variables
 export const encryptMessage = (message) => {
   const SECRET_KEY = process.env.NEXT_PUBLIC_SECRET_KEY; // Access the secret key from environment variable
