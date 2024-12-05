@@ -66,7 +66,7 @@ const MessageBoard = () => {
           alt="User Avatar"
           width={32}
           height={32}
-          className="rounded-full object-cover"
+          className="w-12 h-12 rounded-full border-2 border-gray-300"
         />
       </button>
 

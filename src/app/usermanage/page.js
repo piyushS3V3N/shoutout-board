@@ -117,9 +117,9 @@ const UserManagement = () => {
         <Image
           src={userIcon}
           alt="User Avatar"
-          width={100} // Set width
-          height={100} // Set height
-          className="w-12 h-12 rounded-full border-2 border-gray-300"
+          width={50} // Set width
+          height={50} // Set height
+          className="w-24 h-24 rounded-full border-2 border-gray-300"
         />
         <strong className="text-lg">
           {showUsername ? username || "Anonymous" : user.uid}
@@ -173,8 +173,8 @@ const UserManagement = () => {
             <Image
               src={URL.createObjectURL(icon)} // Preview the image immediately after selection
               alt="Profile Preview"
-              width={100} // Set width
-              height={100} // Set height
+              width={32} // Set width to 32px for the preview
+              height={32} // Set height to 32px for the preview
               className="mt-2 rounded-full border-2 border-gray-300"
             />
           </div>
@@ -192,7 +192,7 @@ const UserManagement = () => {
       >
         {loading ? "Saving..." : "Save Profile"}
       </button>
-      <div />
+
       {/* Back Button to navigate to message board */}
       <button
         onClick={handleBack}

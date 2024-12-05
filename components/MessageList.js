@@ -87,26 +87,26 @@ const MessageList = () => {
             className={`p-4 border-2 rounded-lg shadow-md ${
               msg.userId === user?.uid
                 ? "bg-blue-600 text-white" // Current user's messages in blue (darker)
-                : "bg-teal-50 text-gray-800" // Other users' messages in light teal
+                : "bg-teal-0 text-gray-800" // Other users' messages in light teal
             }`}
           >
-            <div className="flex items-center mb-2 space-x-2">
+            <div className="mt-4 flex items-center space-x-2">
               {/* User icon */}
               <Image
                 src={icon || "/default.png"} // Fallback to a default avatar
                 alt="User Avatar"
                 width={32} // Set width for Image component
                 height={32} // Set height for Image component
-                className="rounded-full object-cover" // Ensure fixed size and round shape
+                className=" rounded-full border-2 border-gray-300 " // Ensure fixed size and round shape
               />
               <strong className="text-lg">
                 {showUsername ? username : msg.userId}
               </strong>
             </div>
             {/* Separator */}
-            <div className="border-b-2 mb-2 border-gray-950" />
+            <br />
             {/* Message content */}
-            <p className="mb-2 text-sm leading-relaxed">{msg.message}</p>{" "}
+            <p className="mb-2 text-m leading-relaxed "> {msg.message}</p>{" "}
             {/* Ensured readability of text */}
             {/* Render image if the message has media (Base64) */}
             {msg.media && (
