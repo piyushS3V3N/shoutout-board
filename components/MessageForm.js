@@ -7,7 +7,7 @@ import { useAuth } from "./FirebaseProvider";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { Picker } from "emoji-mart"; // Import emoji picker
 
-const MessageForm = ({ secretKey }) => {
+const MessageForm = () => {
   const [message, setMessage] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false); // Show emoji picker state
   const { user } = useAuth(); // Access user context
@@ -18,7 +18,7 @@ const MessageForm = ({ secretKey }) => {
 
     if (!message.trim()) return; // Don't send empty messages
 
-    const encryptedMessage = encryptMessage(message, secretKey);
+    const encryptedMessage = encryptMessage(message);
     try {
       await addDoc(collection(db, "messages"), {
         message: encryptedMessage,

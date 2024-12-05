@@ -9,7 +9,6 @@ import MessageForm from "../../../components/MessageForm";
 const MessageBoard = () => {
   const { user } = useAuth();
   const router = useRouter();
-  const secretKey = "YOUR_SECRET_KEY"; // Replace with secure key logic
 
   // Redirect to sign-in page if no user is logged in
   useEffect(() => {
@@ -19,7 +18,6 @@ const MessageBoard = () => {
   }, [user, router]);
 
   if (!user) return <div>Loading...</div>; // Prevent rendering before redirect
-
   return (
     <div className="flex flex-col h-screen bg-gray-950">
       {/* Chat header */}
@@ -29,12 +27,12 @@ const MessageBoard = () => {
 
       {/* Message list container */}
       <div className="flex-grow overflow-y-auto p-4 space-y-4 bg-gray-950">
-        <MessageList secretKey={secretKey} />
+        <MessageList />
       </div>
 
       {/* Message form container */}
       <div className="bg-gray-800 p-4">
-        <MessageForm secretKey={secretKey} />
+        <MessageForm />
       </div>
     </div>
   );

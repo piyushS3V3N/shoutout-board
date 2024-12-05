@@ -4,7 +4,7 @@ import { db, collection, onSnapshot, query, orderBy } from "../utils/firebase"; 
 import { decryptMessage } from "../utils/encryption"; // Decrypt the messages
 import { useAuth } from "./FirebaseProvider"; // Assuming you're using FirebaseProvider for user context
 
-const MessageList = ({ secretKey }) => {
+const MessageList = () => {
   const { user } = useAuth(); // Get current user from context
   const [messages, setMessages] = useState([]);
   const messagesEndRef = useRef(null); // Ref to scroll to the last message
@@ -19,7 +19,7 @@ const MessageList = ({ secretKey }) => {
     const unsubscribe = onSnapshot(messagesQuery, (querySnapshot) => {
       const fetchedMessages = querySnapshot.docs.map((doc) => {
         const data = doc.data();
-        const decryptedMessage = decryptMessage(data.message, secretKey); // Decrypt the message
+        const decryptedMessage = decryptMessage(data.message); // Decrypt the message
 
         // Safely access the timestamp field
         const timestamp = data.timestamp
@@ -38,7 +38,7 @@ const MessageList = ({ secretKey }) => {
 
     // Cleanup the listener on unmount
     return () => unsubscribe();
-  }, [secretKey]); // Re-run when the secretKey changes
+  }); // Re-run when the secretKey changes
 
   // Scroll to the bottom when new messages arrive
   useEffect(() => {
