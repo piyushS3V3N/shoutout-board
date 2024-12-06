@@ -55,11 +55,11 @@ const MessageBoard = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gray-950 relative">
+    <div className="flex flex-col h-screen  relative">
       {/* Profile icon button */}
       <button
         onClick={handleProfileClick}
-        className="absolute top-4 left-16 bg-gray-700 hover:bg-gray-600 p-2 rounded-full"
+        className="absolute top-4 left-16  hover:bg-gray-600 p-2 rounded-full"
       >
         <Image
           src={userIcon} // Use the user's icon or fallback to default
@@ -84,12 +84,12 @@ const MessageBoard = () => {
       </div>
 
       {/* Message list container */}
-      <div className="flex-grow overflow-y-auto p-4 space-y-4 bg-gray-950">
+      <div className="flex-grow overflow-y-auto p-4 space-y-4 ">
         <MessageList />
       </div>
 
       {/* Message form container */}
-      <div className="bg-gray-800 p-4">
+      <div className=" p-4">
         <MessageForm />
       </div>
     </div>

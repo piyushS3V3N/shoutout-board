@@ -97,7 +97,7 @@ const MessageList = () => {
                 alt="User Avatar"
                 width={32} // Set width for Image component
                 height={32} // Set height for Image component
-                className=" rounded-full border-2 border-gray-300 " // Ensure fixed size and round shape
+                className=" rounded-full border-2  " // Ensure fixed size and round shape
               />
               <strong className="text-lg">
                 {showUsername ? username : msg.userId}
